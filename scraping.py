@@ -19,7 +19,9 @@ def scrape_all():
       "featured_image": featured_image(browser),
       "facts": mars_facts(browser),
       "last_modified": dt.datetime.now(),
-      "hires_hemisphere": hires_hemisphere(browser)}
+      "hires_hemisphere": hires_hemisphere(browser)
+      #"kitty": little_kitty_img()
+      }
       
     browser.quit() #we need to enable that if we dont want to see browser running(# lines 129-131)
     return data
@@ -75,29 +77,27 @@ def featured_image(browser):
         return None, None
     return img_url
 
+def little_kitty_img():
+    little_kitty = [{'imie':'tara','img_url':"https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"},{'imie':'mika','img_url':"https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"}]
+    return little_kitty
+
 def hires_hemisphere(browser):
+    
+    hemisphere_image_urls = []
+
+    #test list in case source url doesn't work
+    mock_hemispheres = [{"title": "kitty1",
+    "img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"},
+    {"title": "kitty2","img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"},
+    {"title": "kitty3","img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"},
+    {"title": "kitty4","img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"}]
+    
+    
     try:
-        # Visit the USGS Astrogeology Science Center Site
+        # visit USGS Site
         url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
         browser.visit(url)
-
-        hemisphere_image_urls = []
-        mock_hemispheres = [{
-            "title": "kitty1",
-            "img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"},
-        {
-            "title": "kitty2",
-            "img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"
-        },
-        {
-            "title": "kitty3",
-            "img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"
-        },
-        {
-            "title": "kitty4",
-            "img_url": "https://live.staticflickr.com/3397/3551189653_501acccd41_b.jpg"}]
-
-    
+  
     # getting list of all images of hemisphere
         links = browser.find_by_css("a.product-item h3")
         for item in range(len(links)):
@@ -110,7 +110,7 @@ def hires_hemisphere(browser):
             sample_element = browser.find_link_by_text("Sample").first
             hemisphere["img_url"] = sample_element["href"]
         
-        # Extracint hemisphere title
+        # extracint hemisphere title
             hemisphere["title"] = browser.find_by_css("h2.title").text
         
         # adding dict. hemisphere key and item to the list
@@ -144,10 +144,14 @@ def mars_facts(browser):
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html()
 
+#i kept additional functions outside scrape to confirm, program works ok
 mars_news(browser)
 featured_image(browser)
 mars_facts(browser)
 hires_hemisphere(browser)
+little_kitty_img()
+
+#actuall scraping function
 scrape_all()
 
 
